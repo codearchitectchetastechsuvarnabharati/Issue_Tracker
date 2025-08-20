@@ -71,7 +71,7 @@ export default function IssueDetailModal({ isOpen, onClose, issueId }: IssueDeta
   };
 
   const handleAssigneeChange = (assignedTo: string) => {
-    updateIssueMutation.mutate({ assignedTo: assignedTo || undefined });
+    updateIssueMutation.mutate({ assignedTo: assignedTo === "unassigned" ? undefined : assignedTo });
   };
 
   const handleAddComment = () => {
@@ -151,12 +151,12 @@ export default function IssueDetailModal({ isOpen, onClose, issueId }: IssueDeta
                   
                   <div>
                     <Label className="block text-sm font-medium text-gray-700 mb-2">Assigned To</Label>
-                    <Select value={issue.assignedTo || ""} onValueChange={handleAssigneeChange}>
+                    <Select value={issue.assignedTo || "unassigned"} onValueChange={handleAssigneeChange}>
                       <SelectTrigger data-testid="select-assignee">
                         <SelectValue placeholder="Unassigned" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Unassigned</SelectItem>
+                        <SelectItem value="unassigned">Unassigned</SelectItem>
                         <SelectItem value="Sarah Miller">Sarah Miller</SelectItem>
                         <SelectItem value="Mike Johnson">Mike Johnson</SelectItem>
                         <SelectItem value="David Chen">David Chen</SelectItem>

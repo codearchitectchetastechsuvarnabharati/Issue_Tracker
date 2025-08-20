@@ -74,7 +74,10 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const now = new Date();
     const issue: Issue = { 
-      ...insertIssue, 
+      ...insertIssue,
+      status: insertIssue.status || "open",
+      priority: insertIssue.priority || "medium",
+      assignedTo: insertIssue.assignedTo || null,
       id, 
       createdAt: now, 
       updatedAt: now 
@@ -105,7 +108,8 @@ export class MemStorage implements IStorage {
   async createComment(insertComment: InsertComment): Promise<Comment> {
     const id = randomUUID();
     const comment: Comment = { 
-      ...insertComment, 
+      ...insertComment,
+      isInternal: insertComment.isInternal || "false",
       id, 
       createdAt: new Date() 
     };

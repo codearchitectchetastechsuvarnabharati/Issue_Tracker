@@ -39,8 +39,8 @@ export default function TeamDashboard() {
                          issue.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          issue.customerEmail.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesStatus = !statusFilter || issue.status === statusFilter;
-    const matchesPriority = !priorityFilter || issue.priority === priorityFilter;
+    const matchesStatus = !statusFilter || statusFilter === "all" || issue.status === statusFilter;
+    const matchesPriority = !priorityFilter || priorityFilter === "all" || issue.priority === priorityFilter;
     
     return matchesSearch && matchesStatus && matchesPriority;
   });
@@ -188,7 +188,7 @@ export default function TeamDashboard() {
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="open">Open</SelectItem>
                   <SelectItem value="in-progress">In Progress</SelectItem>
                   <SelectItem value="resolved">Resolved</SelectItem>
@@ -200,7 +200,7 @@ export default function TeamDashboard() {
                   <SelectValue placeholder="All Priority" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Priority</SelectItem>
+                  <SelectItem value="all">All Priority</SelectItem>
                   <SelectItem value="urgent">Urgent</SelectItem>
                   <SelectItem value="high">High</SelectItem>
                   <SelectItem value="medium">Medium</SelectItem>
