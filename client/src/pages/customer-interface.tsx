@@ -84,16 +84,17 @@ export default function CustomerInterface() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Section */}
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-light text-gray-900 mb-4">How can we help you today?</h2>
+        <h2 className="text-3xl font-light text-gray-900 mb-4">Global Customer Support</h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Submit your issue below and our support team will get back to you as soon as possible.
+          Submit your issue below and our worldwide support team will get back to you as soon as possible. 
+          Your request will be handled by our expert team members.
         </p>
       </div>
 
       {/* Issue Submission Form */}
       <Card className="mb-8 shadow-material">
         <CardHeader>
-          <CardTitle>Submit New Issue</CardTitle>
+          <CardTitle>Submit New Issue to Global Support</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>

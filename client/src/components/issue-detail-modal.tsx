@@ -157,9 +157,12 @@ export default function IssueDetailModal({ isOpen, onClose, issueId }: IssueDeta
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="unassigned">Unassigned</SelectItem>
-                        <SelectItem value="Sarah Miller">Sarah Miller</SelectItem>
-                        <SelectItem value="Mike Johnson">Mike Johnson</SelectItem>
-                        <SelectItem value="David Chen">David Chen</SelectItem>
+                        <SelectItem value="Shaurya Raj">Shaurya Raj</SelectItem>
+                        <SelectItem value="Ramesh Gowda">Ramesh Gowda</SelectItem>
+                        <SelectItem value="Balashankar Sharma">Balashankar Sharma</SelectItem>
+                        <SelectItem value="Aniket Singh">Aniket Singh</SelectItem>
+                        <SelectItem value="Wilson Murphy">Wilson Murphy</SelectItem>
+                        <SelectItem value="Tanish Kumar">Tanish Kumar</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

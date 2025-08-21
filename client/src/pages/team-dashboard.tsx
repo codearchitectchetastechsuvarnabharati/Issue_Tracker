@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,14 +23,25 @@ export default function TeamDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
+  const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
 
   const { data: issues = [], isLoading: issuesLoading } = useQuery<Issue[]>({
     queryKey: ['/api/issues'],
+    refetchInterval: 5000, // Auto-refresh every 5 seconds
   });
 
   const { data: stats } = useQuery<Stats>({
     queryKey: ['/api/stats'],
+    refetchInterval: 5000, // Auto-refresh stats every 5 seconds
   });
+
+  // Update the time display every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLastUpdateTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Filter issues based on search and filters
   const filteredIssues = issues.filter(issue => {
@@ -86,14 +97,17 @@ export default function TeamDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-light text-gray-900">Team Dashboard</h2>
-            <p className="text-gray-600 mt-1">Manage and track customer issues</p>
+            <p className="text-gray-600 mt-1">Live support issues from customers worldwide</p>
           </div>
           <div className="flex items-center space-x-3">
-            <span className="text-sm text-gray-500">
-              Last updated: <span data-testid="text-last-updated">{new Date().toLocaleTimeString()}</span>
-            </span>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-gray-500">
+                Live Issues: <span data-testid="text-last-updated">{lastUpdateTime.toLocaleTimeString()}</span>
+              </span>
+            </div>
             <Button variant="ghost" size="sm" onClick={() => window.location.reload()}>
-              <i className="fas fa-sync-alt"></i>
+              <i className="fas fa-sync-alt mr-1"></i>Refresh
             </Button>
           </div>
         </div>
@@ -209,9 +223,15 @@ export default function TeamDashboard() {
               </Select>
             </div>
             
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-gray-500">
+                  Auto-refreshing every 5 seconds
+                </span>
+              </div>
               <span className="text-sm text-gray-500">
-                Showing {filteredIssues.length} of {issues.length} issues
+                Showing {filteredIssues.length} of {issues.length} global issues
               </span>
             </div>
           </div>
