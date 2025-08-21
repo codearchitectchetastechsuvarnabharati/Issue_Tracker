@@ -43,8 +43,20 @@ export default function TeamDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Filter issues based on search and filters
-  const filteredIssues = issues.filter(issue => {
+  // Team member email mapping
+  const teamMemberEmails: { [key: string]: string } = {
+    "Shaurya Raj": "shaurya.raj@company.com",
+    "Ramesh Gowda": "ramesh.gowda@company.com", 
+    "Balashankar Sharma": "balashankar.sharma@company.com",
+    "Aniket Singh": "aniket.singh@company.com",
+    "Wilson Murphy": "wilson.murphy@company.com",
+    "Tanish Kumar": "tanish.kumar@company.com"
+  };
+
+  // Filter issues - show only active issues (not resolved/completed)
+  const activeIssues = issues.filter(issue => issue.status !== 'resolved');
+  
+  const filteredIssues = activeIssues.filter(issue => {
     const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          issue.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          issue.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,7 +109,7 @@ export default function TeamDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-light text-gray-900">Team Dashboard</h2>
-            <p className="text-gray-600 mt-1">Live support issues from customers worldwide</p>
+            <p className="text-gray-600 mt-1">Active support issues from customers worldwide - Completed issues are hidden</p>
           </div>
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2">
@@ -202,10 +214,9 @@ export default function TeamDashboard() {
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="all">All Active Status</SelectItem>
                   <SelectItem value="open">Open</SelectItem>
                   <SelectItem value="in-progress">In Progress</SelectItem>
-                  <SelectItem value="resolved">Resolved</SelectItem>
                 </SelectContent>
               </Select>
               
@@ -231,7 +242,7 @@ export default function TeamDashboard() {
                 </span>
               </div>
               <span className="text-sm text-gray-500">
-                Showing {filteredIssues.length} of {issues.length} global issues
+                Showing {filteredIssues.length} of {activeIssues.length} active global issues
               </span>
             </div>
           </div>
@@ -251,7 +262,7 @@ export default function TeamDashboard() {
                   <TableHead>Issue</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Priority</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="font-bold text-gray-900">STATUS</TableHead>
                   <TableHead>Assigned To</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -331,34 +342,56 @@ export default function TeamDashboard() {
                       </TableCell>
                       
                       <TableCell>
-                        <Badge 
-                          className={getStatusColor(issue.status)}
-                          data-testid={`badge-status-${issue.id}`}
-                        >
-                          {issue.status === 'in-progress' ? 'In Progress' : 
-                           issue.status.charAt(0).toUpperCase() + issue.status.slice(1)}
-                        </Badge>
+                        <div className="flex items-center space-x-2">
+                          <div className={`w-3 h-3 rounded-full ${
+                            issue.status === 'open' ? 'bg-red-500' :
+                            issue.status === 'in-progress' ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'
+                          }`}></div>
+                          <Badge 
+                            className={`${getStatusColor(issue.status)} font-medium`}
+                            data-testid={`badge-status-${issue.id}`}
+                          >
+                            {issue.status === 'in-progress' ? 'IN PROGRESS' : 
+                             issue.status.toUpperCase()}
+                          </Badge>
+                        </div>
                       </TableCell>
                       
                       <TableCell>
                         {issue.assignedTo ? (
                           <div className="flex items-center">
-                            <Avatar className="h-6 w-6">
+                            <Avatar className="h-8 w-8">
                               <AvatarFallback className="text-xs bg-primary text-white">
                                 {issue.assignedTo.split(' ').map(n => n[0]).join('')}
                               </AvatarFallback>
                             </Avatar>
-                            <span 
-                              className="ml-2 text-sm text-gray-900"
-                              data-testid={`text-assignee-${issue.id}`}
-                            >
-                              {issue.assignedTo}
-                            </span>
+                            <div className="ml-3">
+                              <div 
+                                className="text-sm font-medium text-gray-900"
+                                data-testid={`text-assignee-${issue.id}`}
+                              >
+                                {issue.assignedTo}
+                              </div>
+                              <div 
+                                className="text-xs text-gray-500"
+                                data-testid={`text-assignee-email-${issue.id}`}
+                              >
+                                {teamMemberEmails[issue.assignedTo] || 'email@company.com'}
+                              </div>
+                            </div>
                           </div>
                         ) : (
-                          <span className="text-sm text-gray-500" data-testid={`text-unassigned-${issue.id}`}>
-                            Unassigned
-                          </span>
+                          <div className="flex items-center">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback className="text-xs bg-gray-300 text-gray-600">?</AvatarFallback>
+                            </Avatar>
+                            <div className="ml-3">
+                              <span className="text-sm text-gray-500" data-testid={`text-unassigned-${issue.id}`}>
+                                Unassigned
+                              </span>
+                              <div className="text-xs text-gray-400">No assignee</div>
+                            </div>
+                          </div>
                         )}
                       </TableCell>
                       
